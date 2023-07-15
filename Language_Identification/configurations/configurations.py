@@ -15,6 +15,10 @@ class BaseConfig:
                                  type=int,
                                  default=128)
 
+        self.parser.add_argument("--inference_batch_size",
+                                 type=int,
+                                 default=512)
+
         self.parser.add_argument("--n_epochs",
                                  type=int,
                                  default=50)
