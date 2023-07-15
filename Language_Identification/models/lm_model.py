@@ -1,5 +1,6 @@
 # ============================ Third Party libs ============================
 from typing import Type, List, Optional
+import tqdm
 import torch
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import ModelCheckpoint
@@ -8,6 +9,7 @@ from pytorch_lightning.loggers import CSVLogger
 from transformers import AutoModel, AutoTokenizer
 import torchmetrics
 from torch.optim.lr_scheduler import ReduceLROnPlateau
+from torch.utils.data import DataLoader
 
 # ============================ My packages ============================
 from Language_Identification.utils import InputExample
@@ -164,3 +166,30 @@ class LmModel(pl.LightningModule):
         }
 
         return [optimizer], [lr_scheduler]
+
+    def predict(self,
+                test_data: List[InputExample],
+                batch_size: int,
+                max_len: Optional[int] = None):
+        probabilities = []
+        labels = []
+        self.eval()
+        self.model.to(self.config.device)
+
+        test_dataset = Dataset(data=test_data, tokenizer=self.tokenizer, max_len=max_len,
+                               mode="test")
+        test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
+
+        with torch.no_grad():
+            for batch in tqdm.tqdm(test_loader):
+                batch["features"]["input_ids"] = batch["features"]["input_ids"].to(
+                    self.config.device)
+                batch["features"]["attention_mask"] = batch["features"]["attention_mask"].to(
+                    self.config.device)
+                logits = self.forward(batch["features"])
+                probabilities.append(torch.softmax(logits, dim=-1))
+                labels.append(torch.argmax(logits, dim=-1))
+
+        probabilities = torch.cat(probabilities, dim=0)
+        labels = torch.cat(labels, dim=0)
+        return probabilities, labels
