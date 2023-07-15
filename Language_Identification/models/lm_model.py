@@ -7,6 +7,7 @@ from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.loggers import CSVLogger
 from transformers import AutoModel, AutoTokenizer
 import torchmetrics
+from torch.optim.lr_scheduler import ReduceLROnPlateau
 
 # ============================ My packages ============================
 from Language_Identification.utils import InputExample
@@ -121,10 +122,12 @@ class LmModel(pl.LightningModule):
                                                     patience=early_stopping_patience)
             callbacks.append(early_stopping_callback)
 
+        callbacks.append(pl.callbacks.LearningRateMonitor(logging_interval="epoch"))
+
         logger = CSVLogger(self.config.saved_model_dir, name=self.config.model_name)
 
         trainer = pl.Trainer(max_epochs=self.config.n_epochs, gpus=[int(self.config.device[-1])],
-                             callbacks=callbacks, min_epochs=20,
+                             callbacks=callbacks, min_epochs=10,
                              progress_bar_refresh_rate=60, logger=logger)
         self.data_module = DataModule(config=self.config,
                                       train_data=self.train_data, dev_data=self.dev_data,
@@ -146,9 +149,18 @@ class LmModel(pl.LightningModule):
 
         self.trainer.fit(self, datamodule=self.data_module)
 
-    def configure_optimizers(self):
-        optimizer = self.optimizer(self.parameters(), lr=self.learning_rate)
-        return [optimizer]
-
     def test(self):
         self.trainer.test(self, datamodule=self.data_module)
+
+    def configure_optimizers(self):
+        optimizer = self.optimizer(self.parameters(), lr=self.learning_rate)
+        scheduler = ReduceLROnPlateau(optimizer, mode="min", patience=2, factor=0.1,
+                                      verbose=True)
+        lr_scheduler = {
+            "scheduler": scheduler,
+            "monitor": "dev_loss",  # Metric to monitor for learning rate reduction
+            "interval": "epoch",
+            "frequency": 1
+        }
+
+        return [optimizer], [lr_scheduler]
