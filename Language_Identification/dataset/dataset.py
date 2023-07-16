@@ -33,13 +33,13 @@ class Dataset(torch.utils.data.Dataset):
         attention_mask = tokenized_sample["attention_mask"].flatten()
 
         character_input = self.tokenizer.convert_tokens_to_ids(list(str(text)))
-        character_input = character_input[:self.max_len-2]
+        character_input = character_input[:(5*self.max_len)-2]
         character_input = self.tokenizer.build_inputs_with_special_tokens(character_input)
         char_attention_mask = [1] * len(character_input)
 
-        character_input += [self.tokenizer.pad_token_id] * (self.max_len - len(character_input))
+        character_input += [self.tokenizer.pad_token_id] * ((5*self.max_len) - len(character_input))
 
-        char_attention_mask += [0] * (self.max_len - len(char_attention_mask))
+        char_attention_mask += [0] * ((5*self.max_len) - len(char_attention_mask))
         character_input = torch.tensor(character_input)
         char_attention_mask = torch.tensor(char_attention_mask)
 
