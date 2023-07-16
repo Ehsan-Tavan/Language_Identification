@@ -62,15 +62,15 @@ class LmModel(pl.LightningModule):
         ])
         self.max_pool = torch.nn.MaxPool1d(self.config.max_len)
 
-        self.linear = torch.nn.Linear(self.model.config.hidden_size+192, num_classes)
+        self.linear = torch.nn.Linear(self.model.config.hidden_size + 192, num_classes)
 
         self.save_hyperparameters()
 
     def forward(self, batch):
         token_output = self.model(**batch["token"], return_dict=True)
         token_output = \
-        self.pooling_model(token_output.last_hidden_state, batch["token"]["attention_mask"],
-                           pooling_methods=self.pooling_methods)[0]
+            self.pooling_model(token_output.last_hidden_state, batch["token"]["attention_mask"],
+                               pooling_methods=self.pooling_methods)[0]
 
         character_outputs = self.model(**batch["character"],
                                        return_dict=True).last_hidden_state.unsqueeze(1)
@@ -206,10 +206,14 @@ class LmModel(pl.LightningModule):
 
         with torch.no_grad():
             for batch in tqdm.tqdm(test_loader):
-                batch["features"]["input_ids"] = batch["features"]["input_ids"].to(
-                    self.config.device)
-                batch["features"]["attention_mask"] = batch["features"]["attention_mask"].to(
-                    self.config.device)
+                batch["features"]["token"]["input_ids"] = batch["features"]["token"][
+                    "input_ids"].to(self.config.device)
+                batch["features"]["token"]["attention_mask"] = batch["features"]["token"][
+                    "attention_mask"].to(self.config.device)
+                batch["features"]["character"]["input_ids"] = batch["features"]["character"][
+                    "input_ids"].to(self.config.device)
+                batch["features"]["character"]["attention_mask"] = batch["features"]["character"][
+                    "attention_mask"].to(self.config.device)
                 logits = self.forward(batch["features"])
                 probabilities.append(torch.softmax(logits, dim=-1))
                 labels.append(torch.argmax(logits, dim=-1))
