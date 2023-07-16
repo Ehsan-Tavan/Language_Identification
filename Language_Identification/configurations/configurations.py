@@ -47,6 +47,13 @@ class BaseConfig:
                                  type=str,
                                  default="cuda:0")
 
+        self.parser.add_argument("--n_filters",
+                                 type=int,
+                                 default=64)
+        self.parser.add_argument("--filter_sizes",
+                                 type=list,
+                                 default=[3, 4, 5])
+
     def add_path(self) -> None:
         self.parser.add_argument("--assets_dir",
                                  type=str,
