@@ -54,15 +54,39 @@ class LmModel(pl.LightningModule):
         self.accuracy = torchmetrics.Accuracy(num_classes=num_classes)
         self.f_score = torchmetrics.F1(average="macro", num_classes=num_classes)
 
-        self.linear = torch.nn.Linear(self.model.config.hidden_size, num_classes)
+        self.convs = torch.nn.ModuleList([
+            torch.nn.Conv2d(in_channels=1,
+                            out_channels=self.config.n_filters,
+                            kernel_size=(fs, self.model.config.hidden_size))
+            for fs in self.config.filter_sizes
+        ])
+        self.max_pool = torch.nn.MaxPool1d(self.config.max_len)
+
+        self.linear = torch.nn.Linear(self.model.config.hidden_size+192, num_classes)
 
         self.save_hyperparameters()
 
     def forward(self, batch):
-        output = self.model(**batch, return_dict=True)
-        output = self.pooling_model(output.last_hidden_state, batch["attention_mask"],
-                                    pooling_methods=self.pooling_methods)
-        output = self.linear(output[0])
+        token_output = self.model(**batch["token"], return_dict=True)
+        token_output = \
+        self.pooling_model(token_output.last_hidden_state, batch["token"]["attention_mask"],
+                           pooling_methods=self.pooling_methods)[0]
+
+        character_outputs = self.model(**batch["character"],
+                                       return_dict=True).last_hidden_state.unsqueeze(1)
+
+        character_outputs = [torch.nn.ReLU()(conv(character_outputs)).squeeze(3) for conv in
+                             self.convs]
+        # conved_n = [batch_size, n_filters, sent_len - filter_sizes[n] + 1]
+
+        character_outputs = [torch.nn.functional.max_pool1d(conv, conv.shape[2]).squeeze(2) for conv
+                             in character_outputs]
+        # pooled_n = [batch_size, n_filters]
+        character_outputs = torch.cat(character_outputs, dim=1)
+
+        output = torch.cat((token_output, character_outputs), dim=1)
+
+        output = self.linear(output)
         return output
 
     def training_step(self, batch, _):
