@@ -29,8 +29,11 @@ def load_dataset(processed_train_file: str,
     else:
         logging.info("Loading raw data ...")
         train_data = read_csv(raw_train_file)
+        train_data.dropna(inplace=True)
         valid_data = read_csv(raw_valid_file)
+        valid_data.dropna(inplace=True)
         test_data = read_csv(raw_test_file)
+        test_data.dropna(inplace=True)
 
         logging.info("Normalizing all data ...")
         train_data["text"] = train_data["text"].apply(normalize_text)
