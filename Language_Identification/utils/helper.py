@@ -60,13 +60,14 @@ def encode_labels(labels: List[str]):
     return encoded_labels, label2index, index2label, label_encoder
 
 
-def prepare_example(data_frame, mode: str = "train") -> list:
+def prepare_example(data_frame, chars: List[List[int]] = None, mode: str = "train") -> list:
     data = []
     if mode in ["train", "test"]:
-        for _, row in data_frame.iterrows():
+        for index, row in data_frame.iterrows():
             data.append(InputExample(text=row["text"],
+                                     chars=chars[index],
                                      label=row["labels"]))
     elif mode == "inference":
-        for _, row in data_frame.iterrows():
-            data.append(InputExample(text=row["text"]))
+        for index, row in data_frame.iterrows():
+            data.append(InputExample(text=row["text"], chars=chars[index]))
     return data

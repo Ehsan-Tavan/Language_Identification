@@ -6,7 +6,8 @@ from sklearn.metrics import classification_report
 from Language_Identification.configurations import BaseConfig
 from Language_Identification.data_loader import read_csv, read_json
 from Language_Identification.utils import prepare_example
-from Language_Identification.models.lm_model import LmModel
+from Language_Identification.models.lm_model import Classifier
+from Language_Identification.data_preparation import TokenIndexer
 
 if __name__ == "__main__":
     CONFIG_CLASS = BaseConfig()
@@ -14,17 +15,24 @@ if __name__ == "__main__":
 
     TEST_DATA = read_csv(os.path.join(ARGS.processed_data_dir, ARGS.test_data_file))
     LABEL2INDEX = read_json(os.path.join(ARGS.assets_dir, ARGS.label2index_file))
+    CHAR2INDEX = read_json(os.path.join(ARGS.assets_dir, "char2idx.json"))
     TEST_DATA["labels"] = TEST_DATA["labels"].apply(lambda label: LABEL2INDEX[label])
-    TEST_SAMPLES = prepare_example(TEST_DATA)
+    CHAR_INDEXER = TokenIndexer()
+    CHAR_INDEXER.load(vocab2idx_path=os.path.join(ARGS.assets_dir, "char2idx.json"),
+                      idx2vocab_path=os.path.join(ARGS.assets_dir, "idx2char.json"))
 
-    MODEL_PATH = "../assets/saved_models/xlm-roberta-base/version_2/checkpoints/" \
-                 "QTag-epoch=02-dev_loss=0.01.ckpt"
-    MODEL = LmModel.load_from_checkpoint(MODEL_PATH).to(ARGS.device)
+    TEST_CHARS = [[char for char in str(sample)] for sample in TEST_DATA.text]
+    TEST_CHARS = CHAR_INDEXER.convert_samples_to_token_indexes(TEST_CHARS)
+    TEST_SAMPLES = prepare_example(TEST_DATA, TEST_CHARS)
 
-    probabilities, predicted_labels = MODEL.predict(TEST_SAMPLES,
+    MODEL_PATH = "../assets/saved_models/xlm-roberta-base/version_11/checkpoints/" \
+                 "QTag-epoch=09-dev_loss=0.26.ckpt"
+    MODEL = Classifier.load_from_checkpoint(MODEL_PATH).to(ARGS.device)
+
+    PROBABILITIES, PREDICTED_LABELS = MODEL.predict(TEST_SAMPLES,
                                                     batch_size=ARGS.inference_batch_size,
                                                     max_len=ARGS.max_len)
 
-    report = classification_report(list(TEST_DATA["labels"]), predicted_labels.cpu(),
+    REPORT = classification_report(list(TEST_DATA["labels"]), PREDICTED_LABELS.cpu(),
                                    target_names=LABEL2INDEX.keys(), digits=4)
-    print(report)
+    print(REPORT)
