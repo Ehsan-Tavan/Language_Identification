@@ -80,4 +80,4 @@ class Trainer(pl.LightningModule):
         self.trainer.fit(self.classifier, datamodule=self.data_module)
 
     def test(self):
-        self.trainer.test(self.claasifier, datamodule=self.data_module)
+        self.trainer.test(self.classifier, datamodule=self.data_module)
