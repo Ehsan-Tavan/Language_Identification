@@ -47,6 +47,13 @@ class BaseConfig:
                                  type=str,
                                  default="cuda:0")
 
+        self.parser.add_argument("--use_char",
+                                 type=bool,
+                                 default=False)
+        self.parser.add_argument("--using_char_threshold",
+                                 type=float,
+                                 default=0.4)
+
         self.parser.add_argument("--char_embedding_dim",
                                  type=int,
                                  default=20)
@@ -93,7 +100,7 @@ class BaseConfig:
 
         self.parser.add_argument("--lm_path",
                                  type=str,
-                                 default="/mnt/disk2/LanguageModels/xlm-roberta-base")
+                                 default="/mnt/disk2/LanguageModels/xlm-roberta-large")
 
         self.parser.add_argument("--saved_model_dir",
                                  type=str,
