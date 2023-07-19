@@ -23,10 +23,13 @@ class Classifier(pl.LightningModule):
                  num_characters: int = None,
                  pooling_methods: List[str] = None,
                  optimizer: Type[torch.optim.Optimizer] = torch.optim.AdamW,
+                 add_char: bool = False,
+                 using_char_threshold: float = 0.4
                  ):
         super().__init__()
         if pooling_methods is None:
             pooling_methods = []
+        self.add_char = add_char
         self.config = config
         self.model = AutoModel.from_pretrained(self.config.lm_path)
         self.tokenizer = AutoTokenizer.from_pretrained(self.config.lm_path)
@@ -47,19 +50,20 @@ class Classifier(pl.LightningModule):
         self.accuracy = torchmetrics.Accuracy(num_classes=num_classes)
         self.f_score = torchmetrics.F1(average="macro", num_classes=num_classes)
 
-        self.embedding_layer = torch.nn.Embedding(num_characters, char_embedding_dim)
+        if self.add_char:
+            self.embedding_layer = torch.nn.Embedding(num_characters, char_embedding_dim)
 
-        self.convs = torch.nn.ModuleList([
-            torch.nn.Conv2d(in_channels=1,
-                            out_channels=self.config.n_filters,
-                            kernel_size=(fs, char_embedding_dim))
-            for fs in self.config.filter_sizes
-        ])
-        self.max_pool = torch.nn.MaxPool1d(self.config.max_len)
+            self.convs = torch.nn.ModuleList([
+                torch.nn.Conv2d(in_channels=1,
+                                out_channels=self.config.n_filters,
+                                kernel_size=(fs, char_embedding_dim))
+                for fs in self.config.filter_sizes
+            ])
+            self.max_pool = torch.nn.MaxPool1d(self.config.max_len)
+            self.char_linear = torch.nn.Linear(192, num_classes)
+            self.using_char_threshold = using_char_threshold
 
         self.lm_linear = torch.nn.Linear(self.model.config.hidden_size, num_classes)
-        self.char_linear = torch.nn.Linear(192, num_classes)
-        self.m = 0.6
 
         self.save_hyperparameters()
 
@@ -68,27 +72,27 @@ class Classifier(pl.LightningModule):
         token_output = \
             self.pooling_model(token_output.last_hidden_state, batch["token"]["attention_mask"],
                                pooling_methods=self.pooling_methods)[0]
+        token_pred = self.lm_linear(token_output)
 
-        char_embedding = self.embedding_layer(batch["character"]["input_ids"]).unsqueeze(1)
+        if self.add_char:
+            char_embedding = self.embedding_layer(batch["character"]["input_ids"]).unsqueeze(1)
 
-        character_outputs = [torch.nn.ReLU()(conv(char_embedding)).squeeze(3) for conv in
-                             self.convs]
-        # conved_n = [batch_size, n_filters, sent_len - filter_sizes[n] + 1]
+            character_outputs = [torch.nn.ReLU()(conv(char_embedding)).squeeze(3) for conv in
+                                 self.convs]
+            # conved_n = [batch_size, n_filters, sent_len - filter_sizes[n] + 1]
 
-        character_outputs = [torch.nn.functional.max_pool1d(conv, conv.shape[2]).squeeze(2) for conv
-                             in character_outputs]
-        # pooled_n = [batch_size, n_filters]
-        character_outputs = torch.cat(character_outputs, dim=1)
-
-        token_output = self.lm_linear(token_output)
-        character_outputs = self.char_linear(character_outputs)
-
-        lm_pred = torch.nn.Softmax(dim=1)(token_output)
-        character_pred = torch.nn.Softmax(dim=1)(character_outputs)
-
-        pred = lm_pred * self.m + character_pred * (1 - self.m)
-        pred = torch.log(pred)
-        return pred
+            character_outputs = [torch.nn.functional.max_pool1d(conv, conv.shape[2]).squeeze(2) for
+                                 conv in character_outputs]
+            # pooled_n = [batch_size, n_filters]
+            character_outputs = torch.cat(character_outputs, dim=1)
+            character_outputs = self.char_linear(character_outputs)
+            character_pred = torch.nn.Softmax(dim=1)(character_outputs)
+            token_pred = torch.nn.Softmax(dim=1)(token_pred)
+            pred = token_pred * (
+                        1 - self.using_char_threshold) + character_pred * self.using_char_threshold
+            pred = torch.log(pred)
+            return pred
+        return token_pred
 
     def training_step(self, batch, _):
         targets = batch["targets"].flatten()
@@ -154,19 +158,11 @@ class Classifier(pl.LightningModule):
         self.model.to(self.config.device)
 
         test_dataset = Dataset(data=test_data, tokenizer=self.tokenizer, max_len=max_len,
-                               mode="test")
+                               mode="test", device=self.config.device)
         test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
         with torch.no_grad():
             for batch in tqdm.tqdm(test_loader):
-                batch["features"]["token"]["input_ids"] = batch["features"]["token"][
-                    "input_ids"].to(self.config.device)
-                batch["features"]["token"]["attention_mask"] = batch["features"]["token"][
-                    "attention_mask"].to(self.config.device)
-                batch["features"]["character"]["input_ids"] = batch["features"]["character"][
-                    "input_ids"].to(self.config.device)
-                batch["features"]["character"]["attention_mask"] = batch["features"]["character"][
-                    "attention_mask"].to(self.config.device)
                 logits = self.forward(batch["features"])
                 probabilities.append(torch.softmax(logits, dim=-1))
                 labels.append(torch.argmax(logits, dim=-1))
