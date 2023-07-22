@@ -1,13 +1,12 @@
 # ============================ Third Party libs ============================
 import os
 import logging
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report
 # ============================ My packages ============================
 from Language_Identification.configurations import BaseConfig
 from Language_Identification.data_loader import write_json
-from Language_Identification.utils import encode_labels, load_dataset
+from Language_Identification.utils import encode_labels, load_dataset, CLASSIFIER2OBJECT, \
+    VECTORIZER2OBJECT
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -36,12 +35,12 @@ if __name__ == "__main__":
     VALID_DATA.labels = LABEL_ENCODER.transform(list(VALID_DATA.labels))
     TEST_DATA.labels = LABEL_ENCODER.transform(list(TEST_DATA.labels))
 
-    VECTORIZER = CountVectorizer()
+    VECTORIZER = VECTORIZER2OBJECT[ARGS.ml_vectorizer]
     TRAIN_TEXT_VECTORIZED = VECTORIZER.fit_transform(TRAIN_DATA.text)
     VALID_TEXT_VECTORIZED = VECTORIZER.transform(VALID_DATA.text)
     TEST_TEXT_VECTORIZED = VECTORIZER.transform(TEST_DATA.text)
 
-    CLASSIFIER = GaussianNB()
+    CLASSIFIER = CLASSIFIER2OBJECT[ARGS.ml_classifier]
 
     CLASSIFIER.fit(TRAIN_TEXT_VECTORIZED, TRAIN_DATA.labels)
 
