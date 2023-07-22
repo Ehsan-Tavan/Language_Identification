@@ -1,7 +1,6 @@
 # ============================ Third Party libs ============================
 import os
 import logging
-import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import GaussianNB
 from sklearn.metrics import classification_report
@@ -39,11 +38,8 @@ if __name__ == "__main__":
 
     VECTORIZER = CountVectorizer()
     TRAIN_TEXT_VECTORIZED = VECTORIZER.fit_transform(TRAIN_DATA.text)
-    TRAIN_TEXT_VECTORIZED = np.array(TRAIN_TEXT_VECTORIZED.toarray())
     VALID_TEXT_VECTORIZED = VECTORIZER.transform(VALID_DATA.text)
-    VALID_TEXT_VECTORIZED = np.array(VALID_TEXT_VECTORIZED.toarray())
     TEST_TEXT_VECTORIZED = VECTORIZER.transform(TEST_DATA.text)
-    TEST_TEXT_VECTORIZED = np.array(TEST_TEXT_VECTORIZED.toarray())
 
     CLASSIFIER = GaussianNB()
 
