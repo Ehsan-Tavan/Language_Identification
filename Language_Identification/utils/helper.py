@@ -3,6 +3,8 @@ import os
 from typing import List, Tuple
 import logging
 import pandas
+import nagisa
+import jieba
 from sklearn import preprocessing
 # ============================ My packages ============================
 from Language_Identification.data_loader import read_csv, write_csv
@@ -71,3 +73,16 @@ def prepare_example(data_frame, chars: List[List[int]] = None, mode: str = "trai
         for index, row in data_frame.iterrows():
             data.append(InputExample(text=row["text"], chars=chars[index]))
     return data
+
+
+def calculate_token_length(sentences: List[str], labels: List[str]):
+    sentences_length = []
+    for sentence, label in zip(sentences, labels):
+        if label == "zh":
+            tokenized = jieba.lcut(sentence)
+        elif label == "ja":
+            tokenized = nagisa.tagging(sentence).words
+        else:
+            tokenized = sentence.split()
+        sentences_length.append([str(len(token)) for token in tokenized])
+    return sentences_length
