@@ -47,12 +47,32 @@ class BaseConfig:
                                  type=str,
                                  default="cuda:0")
 
+        self.parser.add_argument("--ml_classifier",
+                                 type=str,
+                                 help="GaussianNB or SVC",
+                                 default="GaussianNB")
+        self.parser.add_argument("--ml_vectorizer",
+                                 type=str,
+                                 help="CountVectorizer or TfidfVectorizer",
+                                 default="TfidfVectorizer")
+
+        self.parser.add_argument("--use_char",
+                                 type=bool,
+                                 default=False)
+        self.parser.add_argument("--using_char_threshold",
+                                 type=float,
+                                 default=0.4)
+
+        self.parser.add_argument("--char_embedding_dim",
+                                 type=int,
+                                 default=20)
+
         self.parser.add_argument("--n_filters",
                                  type=int,
                                  default=64)
         self.parser.add_argument("--filter_sizes",
                                  type=list,
-                                 default=[3, 4, 5])
+                                 default=[3, 5, 7])
 
     def add_path(self) -> None:
         self.parser.add_argument("--assets_dir",
@@ -89,7 +109,7 @@ class BaseConfig:
 
         self.parser.add_argument("--lm_path",
                                  type=str,
-                                 default="/mnt/disk2/LanguageModels/xlm-roberta-base")
+                                 default="/mnt/disk2/LanguageModels/xlm-roberta-large")
 
         self.parser.add_argument("--saved_model_dir",
                                  type=str,

@@ -28,7 +28,7 @@ class Pooling(torch.nn.Module):
     @staticmethod
     def max_pool(sentence_embedding, attention_mask):
         sentence_embedding = sentence_embedding * attention_mask.unsqueeze(-1)
-        sentence_embedding[~attention_mask.unsqueeze(-1)] = float('-inf')
+        sentence_embedding[~attention_mask.unsqueeze(-1)] = -1000
         sentence_embedding, _ = torch.max(sentence_embedding, dim=1)
         return sentence_embedding
 
