@@ -10,6 +10,7 @@ from matplotlib import pyplot as plt
 # ============================ My packages ============================
 from Language_Identification.data_loader import read_csv
 from Language_Identification.configurations import BaseConfig
+from Language_Identification.utils import LABEL2LANGUAGE
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -47,10 +48,15 @@ if __name__ == "__main__":
                                           math.floor(max(SAMPLE_LENGTHS)),
                                           50)
         plt.hist(SAMPLE_LENGTHS, bins=SAMPLE_LENGTHS_BINS, alpha=0.5)
-        plt.title(f"Histogram for {name}")  # Set the title for the current histogram
+        plt.title(
+            f"Histogram for {LABEL2LANGUAGE[name]}")  # Set the title for the current histogram
         plt.xlabel("Sample Length")
         plt.ylabel("Frequency")
         plt.xlim(0, 100)
         plt.ylim(0, 1800)
 
-        plt.show()
+        plt.savefig(
+            os.path.join(ARGS.plots_dir,
+                         ARGS.sample_length_analysis_folder) + f"/{LABEL2LANGUAGE[name]}.png")
+        plt.clf()
+        # plt.show()
