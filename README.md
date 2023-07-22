@@ -13,7 +13,13 @@ This dataset provides 90k samples consisting of text passages and corresponding 
 arabic (ar), bulgarian (bg), german (de), modern greek (el), english (en), spanish (es), french (fr), hindi (hi), italian (it), japanese (ja), dutch (nl), polish (pl), portuguese (pt), russian (ru), swahili (sw), thai (th), turkish (tr), urdu (ur), vietnamese (vi), and chinese (zh)
 
 ## 3. Data Analysis
+### 3.1 Sample Length Analysis
 In this section, a comprehensive analysis of sample lengths is presented for each class.
 
 ![Sample Length](assets/plots/sample_length/sample_length.png)
 <b style='text-align:center;'>Figure 1: Sample length analysis for each class. </b>
+
+### 3.2 Token Length Analysis
+In this section, a comprehensive analysis of token lengths is presented for each class.
+![Token Length](assets/plots/token_length/token_length.png)
+<b style='text-align:center;'>Figure 2: Token length analysis for each class. </b>
