@@ -36,9 +36,9 @@ if __name__ == "__main__":
     TEST_DATA.labels = LABEL_ENCODER.transform(list(TEST_DATA.labels))
 
     VECTORIZER = VECTORIZER2OBJECT[ARGS.ml_vectorizer]
-    TRAIN_TEXT_VECTORIZED = VECTORIZER.fit_transform(TRAIN_DATA.text)
-    VALID_TEXT_VECTORIZED = VECTORIZER.transform(VALID_DATA.text)
-    TEST_TEXT_VECTORIZED = VECTORIZER.transform(TEST_DATA.text)
+    TRAIN_TEXT_VECTORIZED = VECTORIZER.fit_transform(TRAIN_DATA.text).toarray()
+    VALID_TEXT_VECTORIZED = VECTORIZER.transform(VALID_DATA.text).toarray()
+    TEST_TEXT_VECTORIZED = VECTORIZER.transform(TEST_DATA.text).toarray()
 
     CLASSIFIER = CLASSIFIER2OBJECT[ARGS.ml_classifier]
 
