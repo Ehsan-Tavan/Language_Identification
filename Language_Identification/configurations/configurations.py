@@ -47,6 +47,15 @@ class BaseConfig:
                                  type=str,
                                  default="cuda:0")
 
+        self.parser.add_argument("--ml_classifier",
+                                 type=str,
+                                 help="GaussianNB or SVC",
+                                 default="GaussianNB")
+        self.parser.add_argument("--ml_vectorizer",
+                                 type=str,
+                                 help="CountVectorizer or TfidfVectorizer",
+                                 default="TfidfVectorizer")
+
         self.parser.add_argument("--use_char",
                                  type=bool,
                                  default=False)
