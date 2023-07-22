@@ -87,6 +87,13 @@ class BaseConfig:
                                  type=str,
                                  default=Path(__file__).parents[2].__str__() + "/data/Processed")
 
+        self.parser.add_argument("--plots_dir",
+                                 type=str,
+                                 default=Path(__file__).parents[2].__str__() + "/assets/plots")
+        self.parser.add_argument("--sample_length_analysis_folder",
+                                 type=str,
+                                 default="sample_length")
+
         self.parser.add_argument("--label2index_file",
                                  type=str,
                                  default="label2index.json")
