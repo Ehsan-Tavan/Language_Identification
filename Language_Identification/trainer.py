@@ -5,7 +5,8 @@ import torch
 # ============================ My packages ============================
 from Language_Identification.configurations import BaseConfig
 from Language_Identification.data_loader import write_json
-from Language_Identification.utils import prepare_example, encode_labels, load_dataset
+from Language_Identification.utils import prepare_example, encode_labels, load_dataset, \
+    calculate_token_length
 from Language_Identification.models.lm_model import Classifier
 from Language_Identification.utils import Trainer
 from Language_Identification.data_preparation import TokenIndexer
@@ -45,6 +46,10 @@ if __name__ == "__main__":
     VALID_CHARS = CHAR_INDEXER.convert_samples_to_token_indexes(VALID_CHARS)
     TEST_CHARS = CHAR_INDEXER.convert_samples_to_token_indexes(TEST_CHARS)
 
+    TRAIN_DATA_TOKEN_LENGTH = calculate_token_length(list(TRAIN_DATA.text), list(TRAIN_DATA.labels))
+    VALID_DATA_TOKEN_LENGTH = calculate_token_length(list(VALID_DATA.text), list(VALID_DATA.labels))
+    TEST_DATA_TOKEN_LENGTH = calculate_token_length(list(TEST_DATA.text), list(TEST_DATA.labels))
+
     ENCODED_LABELS, LABEL2INDEX, INDEX2LABEL, LABEL_ENCODER = encode_labels(
         labels=list(TRAIN_DATA.labels))
     write_json(LABEL2INDEX, path=os.path.join(ARGS.assets_dir, ARGS.label2index_file))
@@ -53,9 +58,9 @@ if __name__ == "__main__":
     VALID_DATA.labels = LABEL_ENCODER.transform(list(VALID_DATA.labels))
     TEST_DATA.labels = LABEL_ENCODER.transform(list(TEST_DATA.labels))
 
-    TRAIN_SAMPLES = prepare_example(TRAIN_DATA, TRAIN_CHARS)
-    VALID_SAMPLES = prepare_example(VALID_DATA, VALID_CHARS)
-    TEST_SAMPLES = prepare_example(TEST_DATA, TEST_CHARS)
+    TRAIN_SAMPLES = prepare_example(TRAIN_DATA, TRAIN_CHARS, TRAIN_DATA_TOKEN_LENGTH)
+    VALID_SAMPLES = prepare_example(VALID_DATA, VALID_CHARS, VALID_DATA_TOKEN_LENGTH)
+    TEST_SAMPLES = prepare_example(TEST_DATA, TEST_CHARS, TEST_DATA_TOKEN_LENGTH)
 
     CLASSIFIER = Classifier(config=ARGS, loss_fct=torch.nn.CrossEntropyLoss(),
                             num_classes=len(LABEL2INDEX),

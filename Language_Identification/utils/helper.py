@@ -62,7 +62,9 @@ def encode_labels(labels: List[str]):
     return encoded_labels, label2index, index2label, label_encoder
 
 
-def prepare_example(data_frame, chars: List[List[int]] = None, mode: str = "train") -> list:
+def prepare_example(data_frame, chars: List[List[int]] = None, token_length: List[List[str]] = None,
+                    mode: str = "train") -> list:
+    # ToDo: Should be fixed when chars and token_length is None
     data = []
     if mode in ["train", "test"]:
         for index, row in data_frame.iterrows():
@@ -79,10 +81,10 @@ def calculate_token_length(sentences: List[str], labels: List[str]):
     sentences_length = []
     for sentence, label in zip(sentences, labels):
         if label == "zh":
-            tokenized = jieba.lcut(sentence)
+            tokenized = jieba.lcut(str(sentence))
         elif label == "ja":
-            tokenized = nagisa.tagging(sentence).words
+            tokenized = nagisa.tagging(str(sentence)).words
         else:
-            tokenized = sentence.split()
+            tokenized = str(sentence).split()
         sentences_length.append([str(len(token)) for token in tokenized])
     return sentences_length

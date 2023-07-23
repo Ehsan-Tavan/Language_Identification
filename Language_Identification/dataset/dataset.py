@@ -26,6 +26,7 @@ class Dataset(torch.utils.data.Dataset):
         sample = self.data[item_index]
         text = sample.text
         chars = sample.chars
+        token_length = sample.token_length
         tokenized_sample = self.tokenizer.encode_plus(text=str(text),
                                                       max_length=self.max_len,
                                                       return_tensors="pt",
@@ -35,23 +36,22 @@ class Dataset(torch.utils.data.Dataset):
         input_ids = tokenized_sample["input_ids"].flatten()
         attention_mask = tokenized_sample["attention_mask"].flatten()
 
+        tokenized_token_length = self.tokenizer.encode_plus(text=token_length,
+                                                            is_split_into_words=True,
+                                                            max_length=self.max_len,
+                                                            return_tensors="pt",
+                                                            padding="max_length",
+                                                            truncation=True)
+
+        token_length_input_ids = tokenized_token_length["input_ids"].flatten()
+        token_length_attention_mask = tokenized_token_length["attention_mask"].flatten()
+
         chars = chars[:5 * self.max_len]
         chars_attention_mask = [1] * len(chars)
         chars_attention_mask += [0] * ((5 * self.max_len) - len(chars_attention_mask))
         chars += [0] * ((5 * self.max_len) - len(chars))
         chars = torch.tensor(chars)
         chars_attention_mask = torch.tensor(chars_attention_mask)
-
-        # character_input = self.tokenizer.convert_tokens_to_ids(list(str(text)))
-        # character_input = character_input[:(5*self.max_len)-2]
-        # character_input = self.tokenizer.build_inputs_with_special_tokens(character_input)
-        # char_attention_mask = [1] * len(character_input)
-        #
-        # character_input += [self.tokenizer.pad_token_id] * ((5*self.max_len) - len(character_input))
-        #
-        # char_attention_mask += [0] * ((5*self.max_len) - len(char_attention_mask))
-        # character_input = torch.tensor(character_input)
-        # char_attention_mask = torch.tensor(char_attention_mask)
 
         if self.mode in ["train", "test"]:
             label = sample.label
@@ -60,10 +60,16 @@ class Dataset(torch.utils.data.Dataset):
             return {
                 "features": {"token": {"input_ids": input_ids.to(self.device),
                                        "attention_mask": attention_mask.to(self.device)},
+                             "token_length": {"input_ids": token_length_input_ids.to(self.device),
+                                              "attention_mask": token_length_attention_mask.to(
+                                                  self.device)},
                              "character": {"input_ids": chars.to(self.device),
                                            "attention_mask": chars_attention_mask.to(self.device)}},
                 "targets": label.to(self.device)}
         return {"features": {"token": {"input_ids": input_ids.to(self.device),
                                        "attention_mask": attention_mask.to(self.device)},
+                             "token_length": {"input_ids": token_length_input_ids.to(self.device),
+                                              "attention_mask": token_length_attention_mask.to(
+                                                  self.device)},
                              "character": {"input_ids": chars.to(self.device),
                                            "attention_mask": chars_attention_mask.to(self.device)}}}
