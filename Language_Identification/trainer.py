@@ -65,7 +65,6 @@ if __name__ == "__main__":
     CLASSIFIER = Classifier(config=ARGS, loss_fct=torch.nn.CrossEntropyLoss(),
                             num_classes=len(LABEL2INDEX),
                             num_characters=len(CHAR_INDEXER.get_vocab2idx()),
-                            char_embedding_dim=ARGS.char_embedding_dim,
                             pooling_methods=[ARGS.pooling_method])
 
     TRAINER = Trainer(model_path=ARGS.lm_path, config=ARGS, classifier=CLASSIFIER,
