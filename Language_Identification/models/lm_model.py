@@ -57,7 +57,6 @@ class Classifier(pl.LightningModule):
             ])
             self.max_pool = torch.nn.MaxPool1d(self.config.max_len)
             self.char_classifier = torch.nn.Linear(192, num_classes)
-            self.using_char_threshold = self.config.using_char_threshold
 
         if self.config.use_token_length:
             self.token_length_classifier = torch.nn.Linear(self.model.config.hidden_size,
@@ -104,15 +103,16 @@ class Classifier(pl.LightningModule):
             character_pred = torch.nn.Softmax(dim=1)(character_outputs)
             token_pred = torch.nn.Softmax(dim=1)(token_output)
             pred = token_pred * (
-                    1 - self.using_char_threshold) + character_pred * self.using_char_threshold
+                    1 - self.config.using_char_threshold) + character_pred * self.config.using_char_threshold
             return torch.log(pred)
         elif self.config.use_char and self.config.use_token_length:
             character_pred = torch.nn.Softmax(dim=1)(character_outputs)
             token_pred = torch.nn.Softmax(dim=1)(token_output)
             token_length_pred = torch.nn.Softmax(dim=1)(token_length_output)
             pred = token_pred * (
-                    1 - (self.using_char_threshold + self.using_token_length_threshold)) + \
-                   character_pred * self.using_char_threshold + \
+                    1 - (
+                        self.config.using_char_threshold + self.config.using_token_length_threshold)) + \
+                   character_pred * self.config.using_char_threshold + \
                    token_length_pred * self.config.using_token_length_threshold
             return torch.log(pred)
         elif not self.config.use_char and self.config.use_token_length:
