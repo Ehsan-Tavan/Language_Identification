@@ -58,10 +58,19 @@ class BaseConfig:
 
         self.parser.add_argument("--use_char",
                                  type=bool,
-                                 default=False)
+                                 default=True)
+
         self.parser.add_argument("--using_char_threshold",
                                  type=float,
-                                 default=0.4)
+                                 default=0.2)
+
+        self.parser.add_argument("--use_token_length",
+                                 type=bool,
+                                 default=True)
+
+        self.parser.add_argument("--using_token_length_threshold",
+                                 type=float,
+                                 default=0.2)
 
         self.parser.add_argument("--char_embedding_dim",
                                  type=int,
@@ -87,6 +96,13 @@ class BaseConfig:
                                  type=str,
                                  default=Path(__file__).parents[2].__str__() + "/data/Processed")
 
+        self.parser.add_argument("--plots_dir",
+                                 type=str,
+                                 default=Path(__file__).parents[2].__str__() + "/assets/plots")
+        self.parser.add_argument("--sample_length_analysis_folder",
+                                 type=str,
+                                 default="sample_length")
+
         self.parser.add_argument("--label2index_file",
                                  type=str,
                                  default="label2index.json")
@@ -109,12 +125,17 @@ class BaseConfig:
 
         self.parser.add_argument("--lm_path",
                                  type=str,
-                                 default="/mnt/disk2/LanguageModels/xlm-roberta-large")
+                                 default="/mnt/disk2/LanguageModels/mt5-base-en")
 
         self.parser.add_argument("--saved_model_dir",
                                  type=str,
                                  default=Path(__file__).parents[
                                              2].__str__() + "/assets/saved_models/")
+
+        self.parser.add_argument("--best_model_path",
+                                 type=str,
+                                 default="mt5-base-en/mean/checkpoints/"
+                                         "QTag-epoch=07-dev_loss=0.02.ckpt")
 
     def get_config(self) -> argparse.Namespace:
         self.add_path()

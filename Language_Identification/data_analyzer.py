@@ -4,10 +4,13 @@ import logging
 import numpy as np
 import pandas as pd
 import math
+import nagisa
+import jieba
 from matplotlib import pyplot as plt
 # ============================ My packages ============================
 from Language_Identification.data_loader import read_csv
 from Language_Identification.configurations import BaseConfig
+from Language_Identification.utils import LABEL2LANGUAGE
 
 logging.basicConfig(level=logging.DEBUG)
 
@@ -30,13 +33,30 @@ if __name__ == "__main__":
     for name, group in GROUPED_DATA_FRAME:
         SAMPLE_LENGTHS = []
         for sample in group.text.values:
-            SAMPLE_LENGTHS.append(len(sample.split()))
+            if name == "zh":
+                tokenized = jieba.lcut(sample)
+            elif name == "ja":
+                tokenized = nagisa.tagging(sample).words
+            else:
+                tokenized = sample.split()
+            SAMPLE_LENGTHS.append(len(tokenized))
 
         logging.info("Sample description of %s", name)
         logging.info(pd.DataFrame({"len": SAMPLE_LENGTHS}).describe())
         logging.info("\n")
         SAMPLE_LENGTHS_BINS = np.linspace(math.ceil(min(SAMPLE_LENGTHS)),
                                           math.floor(max(SAMPLE_LENGTHS)),
-                                          20)
+                                          50)
         plt.hist(SAMPLE_LENGTHS, bins=SAMPLE_LENGTHS_BINS, alpha=0.5)
-        plt.show()
+        plt.title(
+            f"Histogram for {LABEL2LANGUAGE[name]}")  # Set the title for the current histogram
+        plt.xlabel("Sample Length")
+        plt.ylabel("Frequency")
+        plt.xlim(0, 100)
+        plt.ylim(0, 1800)
+
+        plt.savefig(
+            os.path.join(ARGS.plots_dir,
+                         ARGS.sample_length_analysis_folder) + f"/{LABEL2LANGUAGE[name]}.png")
+        plt.clf()
+        # plt.show()
