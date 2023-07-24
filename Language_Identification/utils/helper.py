@@ -70,10 +70,12 @@ def prepare_example(data_frame, chars: List[List[int]] = None, token_length: Lis
         for index, row in data_frame.iterrows():
             data.append(InputExample(text=row["text"],
                                      chars=chars[index],
+                                     token_length=token_length[index],
                                      label=row["labels"]))
     elif mode == "inference":
         for index, row in data_frame.iterrows():
-            data.append(InputExample(text=row["text"], chars=chars[index]))
+            data.append(InputExample(text=row["text"], chars=chars[index],
+                                     token_length=token_length[index]))
     return data
 
 
