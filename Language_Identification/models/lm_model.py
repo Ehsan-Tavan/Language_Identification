@@ -111,7 +111,7 @@ class Classifier(pl.LightningModule):
             token_length_pred = torch.nn.Softmax(dim=1)(token_length_output)
             pred = token_pred * (
                     1 - (
-                        self.config.using_char_threshold + self.config.using_token_length_threshold)) + \
+                    self.config.using_char_threshold + self.config.using_token_length_threshold)) + \
                    character_pred * self.config.using_char_threshold + \
                    token_length_pred * self.config.using_token_length_threshold
             return torch.log(pred)
@@ -180,15 +180,16 @@ class Classifier(pl.LightningModule):
 
     def predict(self,
                 test_data: List[InputExample],
-                batch_size: int,
-                max_len: Optional[int] = None):
+                batch_size: int = 1,
+                max_len: Optional[int] = None,
+                mode: str = "test"):
         probabilities = []
         labels = []
         self.eval()
         self.model.to(self.config.device)
 
         test_dataset = Dataset(data=test_data, tokenizer=self.tokenizer, max_len=max_len,
-                               mode="test", device=self.config.device)
+                               mode=mode, device=self.config.device)
         test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
         with torch.no_grad():
