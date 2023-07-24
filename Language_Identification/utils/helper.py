@@ -79,7 +79,7 @@ def prepare_example(data_frame, chars: List[List[int]] = None, token_length: Lis
     return data
 
 
-def calculate_token_length(sentences: List[str], labels: List[str]):
+def calculate_token_length(sentences: List[str], labels: List[str] = ["en"]):
     sentences_length = []
     for sentence, label in zip(sentences, labels):
         if label == "zh":
