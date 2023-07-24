@@ -132,6 +132,11 @@ class BaseConfig:
                                  default=Path(__file__).parents[
                                              2].__str__() + "/assets/saved_models/")
 
+        self.parser.add_argument("--best_model_path",
+                                 type=str,
+                                 default="mt5-base-en/mean/checkpoints/"
+                                         "QTag-epoch=07-dev_loss=0.02.ckpt")
+
     def get_config(self) -> argparse.Namespace:
         self.add_path()
         return self.parser.parse_args()
