@@ -52,6 +52,8 @@ techniques for language identification.
 ![Token Length](assets/plots/token_length/token_length.png)
 <b style='text-align:center;'>Figure 2: Token length analysis for each class. </b>
 
+## 3. Proposed Model
+![Before Training](assets/plots/proposed_model/proposed_model.png)
 ## 4. Results
 
 ### 4.1 Metrics
