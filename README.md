@@ -309,6 +309,70 @@ In this section, we analyze the sentence representations learned by the proposed
 ![After Training](assets/plots/sentence_representation/after_training.png)
 <b style='text-align:center;'>Figure 4: Sentence representation after training. </b>
 
+## 6.Project Structure
+```
+├─ assets                         <- Model artifacts directory
+│   ├─ plots                      <- Iamges
+│   ├─ saved_models               <- Saved models
+│   ├─ char2idx.json              <- Character to index file
+│   ├─ idx2char.json              <- Index to character file
+│   ├─ index2label.json           <- Index to label to index file
+│   ├─ label2index.json           <- Label to index file
+│  
+├─ data                           <- Project data
+│   ├─ Processed                  <- Normalized data
+│   ├─ Raw                        <- Raw data  
+│
+├─ Language_Identification        <- Source code
+│  │
+│  ├─ configurations              <- Config package
+│  │  ├── __init__.py
+│  │  ├── configurations.py       <- Models configurations, data and model paths
+│  │
+│  ├─ data_loader                 <- Data loader package
+│  │  ├── __init__.py
+│  │  ├── data_reader.py          <- Read data scripts
+│  │  ├── data_writer.py          <- Write data scripts
+│  │
+│  ├─ data_preparation            <- Data preparation package
+│  │  ├── __init__.py
+│  │  ├── indexer.py              <- Indexer scripts
+│  │  ├── normalizer.py           <- Text normalization scripts
+│  │  ├── token_indexer.py        <- Token Indexer scripts
+│  │
+│  ├─ dataset                     <- Dataset package
+│  │  ├── __init__.py
+│  │  ├── data_module.py          <- Data module scripts
+│  │  ├── dataset.py              <-  Dataset scripts
+│  │
+│  ├─ inference                   <- Inference package
+│  │  ├── __init__.py
+│  │  ├── inference.py            <- Inference scripts
+│  │
+│  ├─ models                      <- Models package
+│  │  ├── __init__.py
+│  │  ├── lm_model.py             <- Language model scripts
+│  │  ├── pooling_model.py        <-  Pooling methods scripts
+│  │
+│  ├─ utils                       <- Utility package
+│  │  ├── __init__.py
+│  │  ├── constant.py             <- constants
+│  │  ├── helper.py               <-  helper scripts
+│  │  ├── InputExample.py         <-  Input example scripts
+│  │  ├── lightening_trainer.py   <-  Lightening trainer scripts
+│  │
+│  │
+│  ├── __init__.py
+│  ├── data_analyzer.py           <-  Data analyzer scripts
+│  ├── evaluation.py              <- Evaluation scripts
+│  └── inferencer.py              <- Inferencer scripts
+│  └── ml_classifier.py           <- Machine learning trainer scripts
+│  └── trainer.py                 <- Deep learning model trainer scripts
+├── .gitignore                    <- List of files ignored by git
+├── .README.md
+├── requirements.txt              <- File for installing python dependencies
+```
+
 
 
 
