@@ -52,11 +52,23 @@ techniques for language identification.
 ![Token Length](assets/plots/token_length/token_length.png)
 <b style='text-align:center;'>Figure 2: Token length analysis for each class. </b>
 
-## 3. Proposed Model
-![Before Training](assets/plots/proposed_model/proposed_model.png)
-## 4. Results
+## 4. Proposed Model
+In this section, we present our proposed model, which uses various features for language identification. The input to our language model consists of three different components:
+    
+1. Sentence at the token level.
+2. Sentence at the character level. 
+3. Token length for each token represented as a sequence of strings.
 
-### 4.1 Metrics
+To effectively capture these features, we utilize the powerful Mt5-base model for feature extraction at the token level. Additionally, we employ token length for each token as a valuable feature for language identification. Our data analysis suggests that token length variations in different languages can serve as meaningful indicators for this task.
+
+For character-level input, we use an embedding lookup. To extract n-gram features from the character input, we employ a CNN module with 64 filters and window sizes of 3, 5, and 7.
+
+The process involves extracting features from both the Mt5-base model and the character-level CNN module. We then combine the final distributions over classes obtained from the softmax layer after each feature extraction moduel (MT5 and CNN). This combined distribution is utilized in the final softmax layer, which ultimately classifies each sentence.
+
+![Before Training](assets/plots/proposed_model/proposed_model.png)
+## 5. Results
+
+### 5.1 Metrics
 
 For the language identification task, we employ <b>accuracy</b> and <b>macro F1-score</b> as our
 primary evaluation metrics to analyze the performance of all models. Accuracy measures the overall
@@ -64,7 +76,7 @@ correctness of the model's predictions, reflecting the proportion of correctly c
 out of the total. On the other hand, macro F1-score considers both precision and recall for each
 class and then calculates the unweighted average across all classes.
 
-### 4.2 Baseline Models
+### 5.2 Baseline Models
 
 First, we examine the result
 of [Gaussian Naive Bayes](https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html)
@@ -135,9 +147,9 @@ datasets. As a result, we consider this model as our baseline for future experim
 
 **Note**: `ml_classifier.py` script conduct machine learning analysis.
 
-### 4.3 Experimental Evaluations
+### 5.3 Experimental Evaluations
 
-#### 4.3.1 Language Model Analysis
+#### 5.3.1 Language Model Analysis
 
 In the initial step, we conduct a language identification task by evaluating two multilingual
 language models: XLM-RoBERTa-Base and MT5-base. For this analysis, we extract the first token,
@@ -210,7 +222,7 @@ F1-score on both the test and development data.
 <b style='text-align:center;'>Table 2: Analysis of XLM-RoBERTa-Base and MT5-Base with different
 pooling methods.</b>
 
-#### 4.3.2 Using Character-Based Features
+#### 5.3.2 Using Character-Based Features
 
 In This part we use two character-based
 <table style='text-align:center;'>
@@ -243,17 +255,17 @@ In This part we use two character-based
 
   <tr>
   <td>MT5-Base (First Token) + Token Length </td>
-    <td colspan="2">  </td>
-    <td colspan="2">  </td>
-    <td colspan="2">  </td>
-    <td colspan="2">  </td>
+    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> 99.69 </td>
+    <td colspan="2">  99.67 </td>
   </tr>
   <tr>
   <td>MT5-Base (Mean) + Token Length </td>
-    <td colspan="2">  </td>
-    <td colspan="2">  </td>
-    <td colspan="2">  </td>
-    <td colspan="2">  </td>
+    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> 99.70 </td>
+    <td colspan="2"> 99.69 </td>
+    <td colspan="2"> 99.65 </td>
   </tr>
 
   <tr>
