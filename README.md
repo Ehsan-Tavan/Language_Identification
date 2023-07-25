@@ -78,7 +78,11 @@ correctness of the model's predictions, reflecting the proportion of correctly c
 out of the total. On the other hand, macro F1-score considers both precision and recall for each
 class and then calculates the unweighted average across all classes.
 
-### 5.2 Baseline Models
+### 5.2 Pre-Processing
+During the preprocessing step, we apply several normalizations to the text. Firstly, we convert all characters in the sentences to lowercase. Next, we remove all digits from the text. After that, we proceed to eliminate emojis and all punctuation marks from the sentences.
+
+
+### 5.3 Baseline Models
 
 First, we examine the result
 of [Gaussian Naive Bayes](https://scikit-learn.org/stable/modules/generated/sklearn.naive_bayes.GaussianNB.html)
@@ -149,9 +153,9 @@ datasets. As a result, we consider this model as our baseline for future experim
 
 **Note**: `ml_classifier.py` script conduct machine learning analysis.
 
-### 5.3 Experimental Evaluations
+### 5.4 Experimental Evaluations
 
-#### 5.3.1 Language Model Analysis
+#### 5.4.1 Language Model Analysis
 
 In the initial step, we conduct a language identification task by evaluating two multilingual
 language models: XLM-RoBERTa-Base and MT5-base. For this analysis, we extract the first token,
@@ -231,7 +235,7 @@ F1-score on both the test and development data.
 <b style='text-align:center;'>Table 2: Analysis of XLM-RoBERTa-Base and MT5-Base with different
 pooling methods.</b>
 
-#### 5.3.2 Using Character-Based Features
+#### 5.4.2 Using Character-Based Features
 
 In this section, we explore the utilization of two character-based features: sentence representation at the character level and token length for each token. As depicted in Table 3, these features contribute slightly to the model's performance improvement. Consequently, we conclude that multilingual language models such as XLM-RoBERTa and MT5 can perfectly extract the necessary features for the language identification task, making additional features redundant.
 <table style='text-align:center;'>
@@ -296,7 +300,7 @@ In this section, we explore the utilization of two character-based features: sen
 
 <b style='text-align:center;'>Table 3: Analysis of using character-base features with MT5-base.</b>
 
-#### 5.3.3 Sentence Representation Analysis
+#### 5.4.3 Sentence Representation Analysis
 In this section, we analyze the sentence representations learned by the proposed model before and after training. As observed, prior to training, samples in each class may exhibit slight similarities in their representations, owing to the presence of same tokens in each language. However, after training, the sentence representations for each class become distinctly separable. The model successfully achieves well-defined and separable representations for each class.
 
 ![Before Training](assets/plots/sentence_representation/before_training.png)
