@@ -253,7 +253,7 @@ In this section, we explore the utilization of two character-based features: sen
   </tr>
   <tr>
   <td>MT5-Base (First Token) + Character Embedding</td>
-    <td colspan="2"> <b>99.76</b>> </td>
+    <td colspan="2"> <b>99.76</b> </td>
     <td colspan="2"> 99.70 </td>
     <td colspan="2"> <b>99.72</b> </td>
     <td colspan="2"> 99.63 </td>
@@ -290,7 +290,7 @@ In this section, we explore the utilization of two character-based features: sen
   </tr>
   <tr>
   <td><b>MT5-Base (Mean) + Character Embedding +Token Length (proposed model)</b>> </td>
-    <td colspan="2"> <b>99.76</b>> </td>
+    <td colspan="2"> <b>99.76</b> </td>
     <td colspan="2"> 99.72 </td>
     <td colspan="2"> <b>99.72</b> </td>
     <td colspan="2"> 99.64 </td>
@@ -461,6 +461,7 @@ In this section, we analyze the classification result in different languages. Ta
 <b style='text-align:center;'>Table 4: Classification analysis in different languages.</b>
 
 ![confusion matrix](assets/plots/confusion_matrix/confusion_matrix.png)
+
 <b style='text-align:center;'>Figure 5: Confusion matrix for model prediction with test data. </b>
 
 
