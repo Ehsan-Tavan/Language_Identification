@@ -1,7 +1,7 @@
 # ============================ Third Party libs ============================
 from typing import List, Optional
 import pytorch_lightning as pl
-from transformers import AutoTokenizer
+from transformers import AutoTokenizer, MT5Tokenizer
 from pytorch_lightning.callbacks import ModelCheckpoint
 from pytorch_lightning.callbacks.early_stopping import EarlyStopping
 from pytorch_lightning.loggers import CSVLogger
@@ -22,7 +22,7 @@ class Trainer(pl.LightningModule):
                  ):
         super().__init__()
         self.config = config
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        self.tokenizer = MT5Tokenizer.from_pretrained(model_path)
 
         self.train_data = train_data
         self.dev_data = dev_data
