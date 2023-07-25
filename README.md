@@ -79,7 +79,7 @@ out of the total. On the other hand, macro F1-score considers both precision and
 class and then calculates the unweighted average across all classes.
 
 ### 5.2 Pre-Processing
-During the preprocessing step, we apply several normalizations to the text. Firstly, we convert all characters in the sentences to lowercase. Next, we remove all digits from the text. After that, we proceed to eliminate emojis and all punctuation marks from the sentences.
+During the pre-processing step, we apply several normalizations to the text. Firstly, we convert all characters in the sentences to lowercase. Next, we remove all digits from the text. After that, we proceed to eliminate emojis and all punctuation marks from the sentences.
 
 
 ### 5.3 Baseline Models
@@ -253,15 +253,15 @@ In this section, we explore the utilization of two character-based features: sen
   </tr>
   <tr>
   <td>MT5-Base (First Token) + Character Embedding</td>
-    <td colspan="2"> 99.76 </td>
+    <td colspan="2"> <b>99.76</b> </td>
     <td colspan="2"> 99.70 </td>
-    <td colspan="2"> 99.72 </td>
+    <td colspan="2"> <b>99.72</b> </td>
     <td colspan="2"> 99.63 </td>
   </tr>
   <tr>
   <td>MT5-Base (Mean) + Character Embedding</td>
     <td colspan="2"> 99.73 </td>
-    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> <b>99.73</b> </td>
     <td colspan="2"> 99.67 </td>
     <td colspan="2"> 99.65 </td>
   </tr>
@@ -269,9 +269,9 @@ In this section, we explore the utilization of two character-based features: sen
   <tr>
   <td>MT5-Base (First Token) + Token Length </td>
     <td colspan="2"> 99.73 </td>
-    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> <b>99.73</b> </td>
     <td colspan="2"> 99.69 </td>
-    <td colspan="2">  99.67 </td>
+    <td colspan="2">  <b>99.67</b> </td>
   </tr>
   <tr>
   <td>MT5-Base (Mean) + Token Length </td>
@@ -284,15 +284,15 @@ In this section, we explore the utilization of two character-based features: sen
   <tr>
   <td>MT5-Base (First Token) + Character Embedding +Token Length </td>
     <td colspan="2"> 99.72 </td>
-    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> <b>99.73</b> </td>
     <td colspan="2"> 99.66 </td>
     <td colspan="2"> 99.65 </td>
   </tr>
   <tr>
-  <td>MT5-Base (Mean) + Character Embedding +Token Length </td>
-    <td colspan="2"> 99.76 </td>
+  <td><b>MT5-Base (Mean) + Character Embedding +Token Length (proposed model)</b>> </td>
+    <td colspan="2"> <b>99.76</b> </td>
     <td colspan="2"> 99.72 </td>
-    <td colspan="2"> 99.72 </td>
+    <td colspan="2"> <b>99.72</b> </td>
     <td colspan="2"> 99.64 </td>
   </tr>
 
@@ -309,8 +309,230 @@ In this section, we analyze the sentence representations learned by the proposed
 ![After Training](assets/plots/sentence_representation/after_training.png)
 <b style='text-align:center;'>Figure 4: Sentence representation after training. </b>
 
+#### 5.4.4 Classification Result in Different Languages
+In this section, we analyze the classification result in different languages. Table 4 presents the precision, recall, and F1 score for each class, using the <b>MT5-Base (Mean) + Character Embedding + Token Length</b> model by using test data. Figure 5 Also shows the confusion matrix for model prediction with test data.  
+<table style='text-align:center;'>
+  <tr>
+    <td> <b>Language</b> </td>
+    <td colspan="2"><b>Precision</b></td>
+    <td colspan="2"><b>Recall</b></td>
+    <td colspan="2"><b>Macro F1-Score</b></td>
+    <td colspan="2"><b>Num Sentence</b></td>
+  </tr>
+  <tr>
+  <td>Arabic</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 99.90 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Bulgarian</td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 99.80   </td>
+    <td colspan="2"> 500 </td>
+  </tr>  
+  <tr>
+  <td>German</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr> 
+  <tr>
+  <td>Modern greek</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>English</td>
+    <td colspan="2"> 99.60 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Spanish</td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 99.90 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>French</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+   </tr>
+   <td>Hindi</td>
+    <td colspan="2"> 97.27 </td>
+    <td colspan="2"> 99.60 </td>
+    <td colspan="2"> 98.42 </td>
+    <td colspan="2"> 500 </td>
+  <tr>
+  <td>Italian</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 99.60 </td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Japanese</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Dutch</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Polish</td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 99.40 </td>
+    <td colspan="2"> 99.60 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Portuguese</td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Russian</td>
+    <td colspan="2"> 99.80 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 99.90 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Swahili</td>
+    <td colspan="2"> 98.62 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 99.30 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Thai</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Turkish</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Urdu</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 96.40 </td>
+    <td colspan="2"> 99.90 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Vietnamese</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+  <tr>
+  <td>Chinese</td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 100.00 </td>
+    <td colspan="2"> 500 </td>
+  </tr>
+</table>
+<b style='text-align:center;'>Table 4: Classification analysis in different languages.</b>
+
+![confusion matrix](assets/plots/confusion_matrix/confusion_matrix.png)
+
+<b style='text-align:center;'>Figure 5: Confusion matrix for model prediction with test data. </b>
 
 
+
+## 6. Project Structure
+```
+├─ assets                         <- Model artifacts directory
+│   ├─ plots                      <- Iamges
+│   ├─ saved_models               <- Saved models
+│   ├─ char2idx.json              <- Character to index file
+│   ├─ idx2char.json              <- Index to character file
+│   ├─ index2label.json           <- Index to label to index file
+│   ├─ label2index.json           <- Label to index file
+│  
+├─ data                           <- Project data
+│   ├─ Processed                  <- Normalized data
+│   ├─ Raw                        <- Raw data  
+│
+├─ Language_Identification        <- Source code
+│  │
+│  ├─ configurations              <- Config package
+│  │  ├── __init__.py
+│  │  ├── configurations.py       <- Models configurations, data and model paths
+│  │
+│  ├─ data_loader                 <- Data loader package
+│  │  ├── __init__.py
+│  │  ├── data_reader.py          <- Read data scripts
+│  │  ├── data_writer.py          <- Write data scripts
+│  │
+│  ├─ data_preparation            <- Data preparation package
+│  │  ├── __init__.py
+│  │  ├── indexer.py              <- Indexer scripts
+│  │  ├── normalizer.py           <- Text normalization scripts
+│  │  ├── token_indexer.py        <- Token Indexer scripts
+│  │
+│  ├─ dataset                     <- Dataset package
+│  │  ├── __init__.py
+│  │  ├── data_module.py          <- Data module scripts
+│  │  ├── dataset.py              <-  Dataset scripts
+│  │
+│  ├─ inference                   <- Inference package
+│  │  ├── __init__.py
+│  │  ├── inference.py            <- Inference scripts
+│  │
+│  ├─ models                      <- Models package
+│  │  ├── __init__.py
+│  │  ├── lm_model.py             <- Language model scripts
+│  │  ├── pooling_model.py        <-  Pooling methods scripts
+│  │
+│  ├─ utils                       <- Utility package
+│  │  ├── __init__.py
+│  │  ├── constant.py             <- constants
+│  │  ├── helper.py               <-  helper scripts
+│  │  ├── InputExample.py         <-  Input example scripts
+│  │  ├── lightening_trainer.py   <-  Lightening trainer scripts
+│  │
+│  │
+│  ├── __init__.py
+│  ├── data_analyzer.py           <-  Data analyzer scripts
+│  ├── evaluation.py              <- Evaluation scripts
+│  └── inferencer.py              <- Inferencer scripts
+│  └── ml_classifier.py           <- Machine learning trainer scripts
+│  └── trainer.py                 <- Deep learning model trainer scripts
+├── .gitignore                    <- List of files ignored by git
+├── .README.md
+├── requirements.txt              <- File for installing python dependencies
+```
+
+## Requirements
+* Python3
+* Packages in requirements.txt
 
 
 
