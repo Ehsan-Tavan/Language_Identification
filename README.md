@@ -63,9 +63,11 @@ To effectively capture these features, we utilize the powerful Mt5-base model fo
 
 For character-level input, we use an embedding lookup. To extract n-gram features from the character input, we employ a CNN module with 64 filters and window sizes of 3, 5, and 7.
 
-The process involves extracting features from both the Mt5-base model and the character-level CNN module. We then combine the final distributions over classes obtained from the softmax layer after each feature extraction moduel (MT5 and CNN). This combined distribution is utilized in the final softmax layer, which ultimately classifies each sentence.
+The process involves extracting features from both the Mt5-base model and the character-level CNN module. We then combine the final distributions over classes obtained from the softmax layer after each feature extraction moduel (MT5 and CNN). This combined distribution is utilized in the final softmax layer, which ultimately classifies each sentence. Figure 3 shows our proposed model.
 
 ![Before Training](assets/plots/proposed_model/proposed_model.png)
+<b style='text-align:center;'>Figure 3: Our proposed model for language identification task. </b>
+
 ## 5. Results
 
 ### 5.1 Metrics
@@ -174,6 +176,13 @@ F1-score on both the test and development data.
     <td colspan="2"> Test </td>
   </tr>
   <tr>
+  <td>Baseline</td>
+    <td colspan="2"> 92.43 </td>
+    <td colspan="2"> 92.22 </td>
+    <td colspan="2"> 92.08 </td>
+    <td colspan="2"> 91.78 </td>
+  </tr>
+  <tr>
   <td>XLM-RoBERTa-Base (First Token)</td>
     <td colspan="2"> 99.73 </td>
     <td colspan="2"> <b>99.73</b> </td>
@@ -224,7 +233,7 @@ pooling methods.</b>
 
 #### 5.3.2 Using Character-Based Features
 
-In This part we use two character-based
+In this section, we explore the utilization of two character-based features: sentence representation at the character level and token length for each token. As depicted in Table 3, these features contribute slightly to the model's performance improvement. Consequently, we conclude that multilingual language models such as XLM-RoBERTa and MT5 can perfectly extract the necessary features for the language identification task, making additional features redundant.
 <table style='text-align:center;'>
   <tr>
     <td> <b>Models</b> </td>
@@ -286,6 +295,9 @@ In This part we use two character-based
 </table>
 
 <b style='text-align:center;'>Table 3: Analysis of using character-base features with MT5-base.</b>
+
+#### 5.3.3 Sentence Representation Analysis
+In this section, we analyze the sentence representations learned by the proposed model before and after training. As observed, prior to training, samples in each class may exhibit slight similarities in their representations, owing to the presence of same tokens in each language. However, after training, the sentence representations for each class become distinctly separable. The model successfully achieves well-defined and separable representations for each class.
 
 ![Before Training](assets/plots/sentence_representation/before_training.png)
 <b style='text-align:center;'>Figure 3: Sentence representation before training. </b>
