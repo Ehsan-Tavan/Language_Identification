@@ -529,8 +529,9 @@ In this section, we analyze the classification result in different languages. Ta
 ├── requirements.txt              <- File for installing python dependencies
 ```
 
-
-
+## Requirements
+* Python3
+* Packages in requirements.txt
 
 
 
