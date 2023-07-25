@@ -253,15 +253,15 @@ In this section, we explore the utilization of two character-based features: sen
   </tr>
   <tr>
   <td>MT5-Base (First Token) + Character Embedding</td>
-    <td colspan="2"> 99.76 </td>
+    <td colspan="2"> <b>99.76</b>> </td>
     <td colspan="2"> 99.70 </td>
-    <td colspan="2"> 99.72 </td>
+    <td colspan="2"> <b>99.72</b> </td>
     <td colspan="2"> 99.63 </td>
   </tr>
   <tr>
   <td>MT5-Base (Mean) + Character Embedding</td>
     <td colspan="2"> 99.73 </td>
-    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> <b>99.73</b> </td>
     <td colspan="2"> 99.67 </td>
     <td colspan="2"> 99.65 </td>
   </tr>
@@ -269,9 +269,9 @@ In this section, we explore the utilization of two character-based features: sen
   <tr>
   <td>MT5-Base (First Token) + Token Length </td>
     <td colspan="2"> 99.73 </td>
-    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> <b>99.73</b> </td>
     <td colspan="2"> 99.69 </td>
-    <td colspan="2">  99.67 </td>
+    <td colspan="2">  <b>99.67</b> </td>
   </tr>
   <tr>
   <td>MT5-Base (Mean) + Token Length </td>
@@ -284,15 +284,15 @@ In this section, we explore the utilization of two character-based features: sen
   <tr>
   <td>MT5-Base (First Token) + Character Embedding +Token Length </td>
     <td colspan="2"> 99.72 </td>
-    <td colspan="2"> 99.73 </td>
+    <td colspan="2"> <b>99.73</b> </td>
     <td colspan="2"> 99.66 </td>
     <td colspan="2"> 99.65 </td>
   </tr>
   <tr>
   <td><b>MT5-Base (Mean) + Character Embedding +Token Length (proposed model)</b>> </td>
-    <td colspan="2"> 99.76 </td>
+    <td colspan="2"> <b>99.76</b>> </td>
     <td colspan="2"> 99.72 </td>
-    <td colspan="2"> 99.72 </td>
+    <td colspan="2"> <b>99.72</b> </td>
     <td colspan="2"> 99.64 </td>
   </tr>
 
