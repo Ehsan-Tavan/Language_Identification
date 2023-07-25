@@ -300,17 +300,8 @@ In this section, we explore the utilization of two character-based features: sen
 
 <b style='text-align:center;'>Table 3: Analysis of using character-base features with MT5-base.</b>
 
-#### 5.4.3 Sentence Representation Analysis
-In this section, we analyze the sentence representations learned by the proposed model before and after training. As observed, prior to training, samples in each class may exhibit slight similarities in their representations, owing to the presence of same tokens in each language. However, after training, the sentence representations for each class become distinctly separable. The model successfully achieves well-defined and separable representations for each class.
-
-![Before Training](assets/plots/sentence_representation/before_training.png)
-<b style='text-align:center;'>Figure 3: Sentence representation before training. </b>
-
-![After Training](assets/plots/sentence_representation/after_training.png)
-<b style='text-align:center;'>Figure 4: Sentence representation after training. </b>
-
-#### 5.4.4 Classification Result in Different Languages
-In this section, we analyze the classification result in different languages. Table 4 presents the precision, recall, and F1 score for each class, using the <b>MT5-Base (Mean) + Character Embedding + Token Length</b> model by using test data. Figure 5 Also shows the confusion matrix for model prediction with test data.  
+#### 5.4.3 Classification Result in Different Languages
+In this section, we analyze the classification result in different languages. Table 4 presents the precision, recall, and F1 score for each class, using the <b>MT5-Base (Mean) + Character Embedding + Token Length</b> model by using test data. Figure 4 Also shows the confusion matrix for model prediction with test data.  
 <table style='text-align:center;'>
   <tr>
     <td> <b>Language</b> </td>
@@ -462,7 +453,17 @@ In this section, we analyze the classification result in different languages. Ta
 
 ![confusion matrix](assets/plots/confusion_matrix/confusion_matrix.png)
 
-<b style='text-align:center;'>Figure 5: Confusion matrix for model prediction with test data. </b>
+<b style='text-align:center;'>Figure 4: Confusion matrix for model prediction with test data. </b>
+
+
+#### 5.4.4 Sentence Representation Analysis
+In this section, we analyze the sentence representations learned by the <b>MT5-Base (Mean) + Character Embedding + Token Length</b> model by using test data before and after training. As observed, prior to training, samples in each class may exhibit slight similarities in their representations, owing to the presence of same tokens in each language. However, after training, the sentence representations for each class become distinctly separable. The model successfully achieves well-defined and separable representations for each class. Figure 5 shows sentence representation before training and Figure 6 shows sentence representation after training.
+
+![Before Training](assets/plots/sentence_representation/before_training.png)
+<b style='text-align:center;'>Figure 5: Sentence representation before training. </b>
+
+![After Training](assets/plots/sentence_representation/after_training.png)
+<b style='text-align:center;'>Figure 6: Sentence representation after training. </b>
 
 
 
@@ -534,5 +535,9 @@ In this section, we analyze the classification result in different languages. Ta
 * Python3
 * Packages in requirements.txt
 
+## ToDo
+ + Add docstring for all functions.
+ + Add more ablation study on different configurations of our proposed model.
+ + Add unit test for functions.
 
 
